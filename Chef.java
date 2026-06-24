@@ -1,30 +1,41 @@
 public class Chef {
     private String nombre;
     private int puntos;
-    private Ingrediente ingredienteActual; // un ingrediente a la vez
+    private Ingrediente ingredienteActual;
+    
+    // Coordenadas en la cuadrícula
+    private int posX;
+    private int posY;
 
     // Constructor
-    public Chef(String nombre) {
+    public Chef(String nombre, int posX, int posY) {
         this.nombre = nombre;
-        this.puntos = 0; // Inicia con 0 puntos
-        this.ingredienteActual = null; // Inicia con las manos vacías
+        this.puntos = 0;
+        this.ingredienteActual = null;
+        this.posX = posX;
+        this.posY = posY;
     }
+
+    // Métodos para mover al chef
+    public void mover(int deltaX, int deltaY) {
+        this.posX += deltaX;
+        this.posY += deltaY;
+    }
+
+    // Getters y Setters para posiciones
+    public int getPosX() { return posX; }
+    public void setPosX(int posX) { this.posX = posX; }
+
+    public int getPosY() { return posY; }
+    public void setPosY(int posY) { this.posY = posY; }
 
     // Getters y Setters
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
-
     public int getPuntos() { return puntos; }
-    
-    // Método para asegurar que los puntos nunca sean negativos
     public void setPuntos(int puntos) { 
-        if(puntos < 0) {
-            this.puntos = 0;
-        } else {
-            this.puntos = puntos; 
-        }
+        this.puntos = Math.max(0, puntos); 
     }
-
     public Ingrediente getIngredienteActual() { return ingredienteActual; }
-    public void setIngredienteActual(Ingrediente ingredienteActual) { this.ingredienteActual = ingredienteActual; }
+    public void setIngredienteActual(Ingrediente ingrediente) { this.ingredienteActual = ingrediente; }
 }
