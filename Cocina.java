@@ -15,7 +15,6 @@ public class Cocina {
         this.ordenes = new ArrayList<>();
         this.estaciones = new ArrayList<>(); 
         
-        // --- ESTACIONES (Layout original sin modificaciones) ---
         this.estaciones.add(new Estacion("Despensa Pan", "DESPENSA", 1, 3));
         this.estaciones.add(new Estacion("Despensa Carne", "DESPENSA", 1, 6));
         this.estaciones.add(new Estacion("Despensa Lechuga", "DESPENSA", 1, 9)); 
@@ -31,13 +30,12 @@ public class Cocina {
         this.estaciones.add(new Estacion("Mostrador 2", "ENTREGA", 14, 6));
     }
 
-    // Genera la receta usando la nueva estructura de Receta
+    // Receta
     public Receta generarReceta() {
         // Nombre de la receta, puntos base (300), tiempo para empezar a degradar (30s)
         return new Receta("Hamburguesa Especial", 300, 30);
     }
-
-    // --- MÉTODOS DE GESTIÓN ---
+    
     public int getTiempo() { return tiempo; }
     public void setTiempo(int tiempo) { this.tiempo = tiempo; }
 
@@ -46,7 +44,9 @@ public class Cocina {
 
     public List<Chef> getChefs() { return chefs; }
     public List<Receta> getOrdenes() { return ordenes; }
-    public List<Estacion> getEstaciones() { return estaciones; }
+    public List<Estacion> getEstaciones() {
+        return this.estaciones;
+    }
 
     public void agregarChef(Chef c) { chefs.add(c); }
     public void agregarOrden(Receta r) { ordenes.add(r); }
