@@ -9,6 +9,7 @@ public class Estacion {
     private Ingrediente ingredienteActual; // Para estufas, tablas o despensas
     private List<Ingrediente> ingredientesEnMesa; // Especial para la mesa de ARMAR
     private int progreso; // Progreso actual de cocción o corte (0 a 100)
+    private final int TIEMPO_LIMITE_QUEMADO = 20;
 
     public Estacion(String nombre, String tipo, int posX, int posY) {
         this.nombre = nombre;
@@ -22,6 +23,18 @@ public class Estacion {
     }
 
     // Getters y Setters
+    public void actualizarEstadoIngrediente() {
+        if (ingredienteActual != null && !ingredienteActual.getEstado().equals("quemado")) {
+            ingredienteActual.incrementarTiempo();
+
+            System.out.println("Tiempo de " + ingredienteActual.getNombre() + ": " + ingredienteActual.getTiempoEnProceso());
+            
+            if (ingredienteActual.getTiempoEnProceso() > TIEMPO_LIMITE_QUEMADO) {
+                ingredienteActual.setEstado("quemado");
+                System.out.println(ingredienteActual.getNombre() + " se ha quemado!");
+            }
+        }
+    }
     public String getNombre() { return nombre; }
     public String getTipo() { return tipo; }
     public int getPosX() { return posX; }
@@ -36,5 +49,11 @@ public class Estacion {
     public int getProgreso() { return progreso; }
     public void setProgreso(int progreso) { 
         this.progreso = Math.max(0, Math.min(100, progreso)); 
+    }
+
+    public void limpiarEstacion() {
+        this.ingredienteActual = null;
+        this.progreso = 0;
+        System.out.println("Estación limpiada.");
     }
 }
