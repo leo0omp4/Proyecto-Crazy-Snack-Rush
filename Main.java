@@ -4,7 +4,7 @@ public class Main {
     public static void main(String[] args) {
         //Cocina principal
         Cocina miCocina = new Cocina();
-        miCocina.setTiempo(120); // Le damos 120 segundos (2 minutos) al juego
+        miCocina.setTiempo(120); // darle 120 segundos al juego
 
         //2 chefs
         Chef chef1 = new Chef("Chef 1");
@@ -23,14 +23,14 @@ public class Main {
         // Hacer que el Chef 1 agarre la carne
         chef1.setIngredienteActual(carne);
         
-        // Validar que el chef la tiene en sus manos
+        // Validar que el chef la tiene
         if (chef1.getIngredienteActual() != null) {
             // System.out.println(chef1.getNombre() + " ha tomado un ingrediente: " + chef1.getIngredienteActual().getNombre());
         }
 
         // Crear lista de ingredientes que se necesitan para una receta
         ArrayList<Ingrediente> ingredientesHamburguesa = new ArrayList<>();
-        ingredientesHamburguesa.add(new Proteina("Carne de Res")); // Ojo, esta es la receta, pide carne
+        ingredientesHamburguesa.add(new Proteina("Carne de Res"));
         ingredientesHamburguesa.add(new PanesYBases("Pan de Hamburguesa"));
         
         // Crear la receta: Lista de ingredientes, 50 puntos, 60 segundos de límite
@@ -41,7 +41,7 @@ public class Main {
         // System.out.println("Nueva orden recibida. Puntos posibles: " + miCocina.getOrdenes().get(0).getPuntosReceta());
 
         // Mostrar la ventana del juego
-        new VentanaJuego();
+        new VentanaJuego(miCocina);
 
     }
 }

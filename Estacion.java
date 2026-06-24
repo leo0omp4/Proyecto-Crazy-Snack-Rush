@@ -15,7 +15,6 @@ public class Estacion {
 
     // Método que pide el UML
     public Receta generarReceta() {
-        // Por ahora retorna null, luego pondremos la lógica para la estación de entrega
         return null; 
     }
 

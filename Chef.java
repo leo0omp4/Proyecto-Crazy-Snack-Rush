@@ -1,7 +1,7 @@
 public class Chef {
     private String nombre;
     private int puntos;
-    private Ingrediente ingredienteActual; // Aquí se cumple la regla de "un ingrediente a la vez"
+    private Ingrediente ingredienteActual; // un ingrediente a la vez
 
     // Constructor
     public Chef(String nombre) {
@@ -16,7 +16,7 @@ public class Chef {
 
     public int getPuntos() { return puntos; }
     
-    // Método modificado para asegurar que los puntos nunca sean negativos según las reglas
+    // Método para asegurar que los puntos nunca sean negativos
     public void setPuntos(int puntos) { 
         if(puntos < 0) {
             this.puntos = 0;

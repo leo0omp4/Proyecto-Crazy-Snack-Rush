@@ -1,6 +1,6 @@
 public class Ingrediente {
     private String nombre;
-    private String estado; // Ejemplo: "crudo", "preparado", "quemado"
+    private String estado;
 
     public Ingrediente(String nombre) {
         this.nombre = nombre;

@@ -14,7 +14,6 @@ public class Receta {
 
     // Método para comparar si los ingredientes entregados coinciden con la receta
     public boolean compararReceta(Receta recetaEntregada) {
-        // Por ahora lo dejamos retornando false, luego le meteremos la lógica
         return false; 
     }
 

@@ -13,9 +13,8 @@ public class Cocina {
         this.ordenes = new ArrayList<>();
     }
 
-    // Método que pide el UML
     public Receta generarReceta() {
-        // Por ahora retorna null, aquí irá la lógica de generación aleatoria más adelante
+        // retorna null, generación aleatoria más adelante
         return null;
     }
 
