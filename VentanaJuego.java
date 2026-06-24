@@ -1,14 +1,14 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VentanaJuego extends JFrame implements KeyListener {
 
@@ -48,6 +48,10 @@ public class VentanaJuego extends JFrame implements KeyListener {
                     juegoTerminado = true;
                     gameLoopTimer.stop();
                     System.out.println("¡Se acabó el tiempo! Fin de la partida.");
+                }
+
+                for (Receta orden : cocinaActual.getOrdenes()) {
+                    orden.actualizarTiempo();
                 }
 
                 // Procesamiento cocción en estufas
@@ -283,19 +287,17 @@ public class VentanaJuego extends JFrame implements KeyListener {
             // Panel de información superior
             g.setColor(new Color(40, 42, 54)); 
             g.fillRect(0, 0, 800, 100);
-
             g.setColor(Color.WHITE);
             g.setFont(new Font("SansSerif", Font.BOLD, 15));
             g.drawString("TIEMPO: " + cocinaActual.getTiempo() + "s", 20, 35);
             g.drawString("PUNTOS: " + cocinaActual.getPuntosTotales(), 20, 65);
 
             // Orden activa
-            g.drawString("ORDEN DE COCINA:", 220, 35);
-            g.setColor(Color.YELLOW);
-            g.drawString("Hamburguesa Especial", 220, 65);
-            g.setFont(new Font("SansSerif", Font.PLAIN, 12));
-            g.setColor(Color.LIGHT_GRAY);
-            g.drawString("(Pan + Carne Cocinada + Lechuga Cortada + Pan)", 410, 65);
+            if (!cocinaActual.getOrdenes().isEmpty()) {
+                Receta actual = cocinaActual.getOrdenes().get(0);
+                g.setColor(Color.YELLOW);
+                g.drawString("ORDEN: " + actual.getNombre() + " (" + actual.getPuntosActuales() + " pts)", 220, 65);
+            }
 
             // Estaciones
             if (cocinaActual != null && cocinaActual.getEstaciones() != null) {

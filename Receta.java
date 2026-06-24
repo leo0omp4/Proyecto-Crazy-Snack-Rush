@@ -1,29 +1,25 @@
-import java.util.List;
-
 public class Receta {
-    private List<Ingrediente> listaIngredientes;
-    private int puntosReceta;
-    private int maxTimeReceta;
+    private String nombre;
+    private int puntosActuales;
+    private int tiempoLimite;
+    private int tiempoTranscurrido;
 
-    // Constructor
-    public Receta(List<Ingrediente> listaIngredientes, int puntosReceta, int maxTimeReceta) {
-        this.listaIngredientes = listaIngredientes;
-        this.puntosReceta = puntosReceta;
-        this.maxTimeReceta = maxTimeReceta;
+    public Receta(String nombre, int puntosBase, int tiempoLimite) {
+        this.nombre = nombre;
+        this.puntosActuales = puntosBase;
+        this.tiempoLimite = tiempoLimite;
+        this.tiempoTranscurrido = 0;
     }
 
-    // Método para comparar si los ingredientes entregados coinciden con la receta
-    public boolean compararReceta(Receta recetaEntregada) {
-        return false; 
+    public void actualizarTiempo() {
+        tiempoTranscurrido++;
+        // Si el tiempo transcurrido llega al límite, reducimos los puntos
+        if (tiempoTranscurrido >= tiempoLimite && puntosActuales > 0) {
+            puntosActuales /= 2;
+            tiempoTranscurrido = 0; // Reiniciamos para el próximo ciclo de degradación
+        }
     }
 
-    // Getters y Setters
-    public List<Ingrediente> getListaIngredientes() { return listaIngredientes; }
-    public void setListaIngredientes(List<Ingrediente> listaIngredientes) { this.listaIngredientes = listaIngredientes; }
-
-    public int getPuntosReceta() { return puntosReceta; }
-    public void setPuntosReceta(int puntosReceta) { this.puntosReceta = puntosReceta; }
-
-    public int getMaxTimeReceta() { return maxTimeReceta; }
-    public void setMaxTimeReceta(int maxTimeReceta) { this.maxTimeReceta = maxTimeReceta; }
+    public String getNombre() { return nombre; }
+    public int getPuntosActuales() { return puntosActuales; }
 }

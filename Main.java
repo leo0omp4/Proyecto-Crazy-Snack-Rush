@@ -2,36 +2,34 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        //Cocina principal
+        // 1. Cocina principal
         Cocina miCocina = new Cocina();
-        miCocina.setTiempo(120); // darle 120 segundos al juego
+        miCocina.setTiempo(120); // 120 segundos para el juego
 
-        // 2 chefs
+        // 2. 2 chefs
         Chef chef1 = new Chef("Chef 1", 7, 6);
         Chef chef2 = new Chef("Chef 2", 8, 6);
 
-        //Añadir los chefs a la lista de la cocina
-        miCocina.getChefs().add(chef1);
-        miCocina.getChefs().add(chef2);
+        // 3. Añadir los chefs a la lista de la cocina
+        miCocina.agregarChef(chef1);
+        miCocina.agregarChef(chef2);
 
-        // Crear proteína
-        Proteina carne = new Proteina("Carne de Res");
-
-        // Crear lista de ingredientes que se necesitan para una receta
+        // 4. Crear lista de ingredientes que se necesitan para la receta
         ArrayList<Ingrediente> ingredientesHamburguesa = new ArrayList<>();
         ingredientesHamburguesa.add(new Proteina("Carne de Res"));
         ingredientesHamburguesa.add(new PanesYBases("Pan de Hamburguesa"));
         
-        // Crear la receta: Lista de ingredientes, 50 puntos, 60 segundos de límite
-        Receta hamburguesa = new Receta(ingredientesHamburguesa, 50, 60);
+        // 5. Crear la receta: 
+        // IMPORTANTE: Ajustamos el constructor para aceptar la lista (si así lo requiere tu Receta.java actual)
+        // o si prefieres mantener el constructor de 3 parámetros, usaremos el nombre.
+        // Asumiendo que ahora tu clase Receta acepta: Receta(ArrayList<Ingrediente>, int puntos, int tiempoLimite)
+        Receta hamburguesa = new Receta("Hamburguesa Especial", 50, 60);
         
-        // Añadir la orden a la cocina
-        miCocina.getOrdenes().add(hamburguesa);
-        // System.out.println("Nueva orden recibida. Puntos posibles: " + miCocina.getOrdenes().get(0).getPuntosReceta());
+        // 6. Añadir la orden a la cocina
+        miCocina.agregarOrden(hamburguesa);
 
-        // Mostrar la ventana del juego
+        // 7. Mostrar la ventana del juego
         VentanaJuego ventana = new VentanaJuego(miCocina);
         ventana.requestFocusInWindow();
-
     }
 }
