@@ -1,4 +1,3 @@
-// Proteina.java
 public class Proteina extends Ingrediente {
     private boolean cocinada;
 
