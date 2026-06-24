@@ -200,25 +200,35 @@ public class VentanaJuego extends JFrame implements KeyListener {
                 else if (est.getTipo().equals("ARMAR")) {
                     if (chef.getIngredienteActual() != null && est.getIngredienteActual() == null) {
                         Ingrediente ing = chef.getIngredienteActual();
-                        est.getIngredientesEnMesa().add(ing);
-                        chef.setIngredienteActual(null);
-                        System.out.println("Dejaste " + ing.getNombre() + " en la mesa de armado.");
+                        
+                        // CORRECCIÓN: Si el chef ya lleva la Hamburguesa Completa terminada, se coloca en el plato listo
+                        if (ing.getNombre().equals("Hamburguesa Completa")) {
+                            est.setIngredienteActual(ing);
+                            chef.setIngredienteActual(null);
+                            System.out.println("Dejaste la Hamburguesa Completa de vuelta en la mesa de armado.");
+                        } else {
+                            // Si son ingredientes crudos/sueltos, los añadimos para armarla
+                            est.getIngredientesEnMesa().add(ing);
+                            chef.setIngredienteActual(null);
+                            System.out.println("Dejaste " + ing.getNombre() + " en la mesa de armado.");
 
-                        int cantPan = 0;
-                        int cantCarne = 0;
-                        int cantLechuga = 0;
+                            // Contar cuántos panes, carnes y lechugas hay en la mesa
+                            int cantPan = 0;
+                            int cantCarne = 0;
+                            int cantLechuga = 0;
 
-                        for (Ingrediente i : est.getIngredientesEnMesa()) {
-                            if (i.getNombre().equals("Pan")) cantPan++;
-                            if (i.getNombre().equals("Carne Cocinada")) cantCarne++;
-                            if (i.getNombre().equals("Lechuga Cortada")) cantLechuga++;
-                        }
+                            for (Ingrediente i : est.getIngredientesEnMesa()) {
+                                if (i.getNombre().equals("Pan")) cantPan++;
+                                if (i.getNombre().equals("Carne Cocinada")) cantCarne++;
+                                if (i.getNombre().equals("Lechuga Cortada")) cantLechuga++;
+                            }
 
-                        // Verificación para combinar: requiere 2 Panes, 1 Carne Cocinada y 1 Lechuga Cortada
-                        if (cantPan >= 2 && cantCarne >= 1 && cantLechuga >= 1) {
-                            est.vaciarMesa();
-                            est.setIngredienteActual(new Proteina("Hamburguesa Completa"));
-                            System.out.println("¡Hamburguesa armada con éxito con tapa superior!");
+                            // Verificación para combinar: requiere 2 Panes, 1 Carne Cocinada y 1 Lechuga Cortada
+                            if (cantPan >= 2 && cantCarne >= 1 && cantLechuga >= 1) {
+                                est.vaciarMesa();
+                                est.setIngredienteActual(new Proteina("Hamburguesa Completa"));
+                                System.out.println("¡Hamburguesa armada con éxito con tapa superior!");
+                            }
                         }
                     } else if (chef.getIngredienteActual() == null && est.getIngredienteActual() != null) {
                         chef.setIngredienteActual(est.getIngredienteActual());

@@ -7,8 +7,8 @@ public class Main {
         miCocina.setTiempo(120); // darle 120 segundos al juego
 
         // 2 chefs
-        Chef chef1 = new Chef("Chef 1", 2, 3);
-        Chef chef2 = new Chef("Chef 2", 6, 4);
+        Chef chef1 = new Chef("Chef 1", 7, 6);
+        Chef chef2 = new Chef("Chef 2", 8, 6);
 
         //Añadir los chefs a la lista de la cocina
         miCocina.getChefs().add(chef1);
