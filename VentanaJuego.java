@@ -76,14 +76,31 @@ public class VentanaJuego extends JFrame implements KeyListener {
     }
 
     private void interactuar(Chef chef) {
-        // Buscamos si hay una estación adyacente (arriba, abajo, izq, der)
         for (Estacion est : cocinaActual.getEstaciones()) {
             int dx = Math.abs(est.getPosX() - chef.getPosX());
             int dy = Math.abs(est.getPosY() - chef.getPosY());
             
-            if (dx + dy == 1) { // Está justo al lado
-                System.out.println("Interactuando con: " + est.getTipo());
-                // Aquí llamaremos a la lógica de recoger/cocinar/entregar
+            if (dx + dy == 1) { 
+                System.out.println("Interactuando con estación de: " + est.getTipo());
+                
+                // LÓGICA DE LA DESPENSA
+                if (est.getTipo().equals("DESPENSA")) {
+                    if (chef.getIngredienteActual() == null) {
+                        // Si el chef tiene las manos vacías, le damos el ingrediente
+                        if (est.getNombre().contains("Pan")) {
+                            chef.setIngredienteActual(new PanesYBases("Pan")); 
+                            System.out.println("¡" + chef.getNombre() + " recogió Pan!");
+                        } else if (est.getNombre().contains("Carne")) {
+                            chef.setIngredienteActual(new Proteina("Carne Cruda")); 
+                            System.out.println("¡" + chef.getNombre() + " recogió Carne Cruda!");
+                        }
+                    } else {
+                        // Si ya tiene algo
+                        System.out.println("¡" + chef.getNombre() + " ya tiene las manos ocupadas con: " + chef.getIngredienteActual().getNombre() + "!");
+                    }
+                }
+                
+                return; // Solo puede interactuar con una estación a la vez
             }
         }
     }
@@ -108,10 +125,15 @@ public class VentanaJuego extends JFrame implements KeyListener {
 
             if (cocinaActual != null && cocinaActual.getEstaciones() != null) {
                 for (Estacion est : cocinaActual.getEstaciones()) {
-                    if (est.getTipo().equals("DESPENSA")) g.setColor(Color.BLUE);
-                    else if (est.getTipo().equals("TRABAJO")) g.setColor(Color.ORANGE);
-                    else if (est.getTipo().equals("ENTREGA")) g.setColor(Color.GREEN);
-                    else g.setColor(Color.DARK_GRAY);
+                    // Colores por zona de trabajo
+                    switch (est.getTipo()) {
+                        case "DESPENSA": g.setColor(Color.BLUE); break;
+                        case "COCINAR": g.setColor(Color.RED); break;
+                        case "CORTAR": g.setColor(Color.YELLOW); break;
+                        case "ARMAR": g.setColor(Color.ORANGE); break;
+                        case "ENTREGA": g.setColor(Color.GREEN); break;
+                        default: g.setColor(Color.DARK_GRAY); break;
+                    }
                     
                     g.fillRect(est.getPosX() * tamanoCelda + 5, est.getPosY() * tamanoCelda + 5, tamanoCelda - 10, tamanoCelda - 10);
                 }
@@ -121,11 +143,17 @@ public class VentanaJuego extends JFrame implements KeyListener {
                 List<Chef> chefs = cocinaActual.getChefs();
                 for (int i = 0; i < chefs.size(); i++) {
                     Chef c = chefs.get(i);
-                    g.setColor(i == 0 ? Color.RED : Color.GREEN);
+                    g.setColor(i == 0 ? Color.WHITE : Color.BLACK);
                     g.fillOval(c.getPosX() * tamanoCelda + 5, c.getPosY() * tamanoCelda + 5, tamanoCelda - 10, tamanoCelda - 10);
                     if(i == chefSeleccionado) {
                         g.setColor(Color.YELLOW);
                         g.drawOval(c.getPosX() * tamanoCelda + 2, c.getPosY() * tamanoCelda + 2, tamanoCelda - 4, tamanoCelda - 4);
+                    }
+                    
+                    // --- NUEVO: Dibujar el ingrediente si el chef lleva uno ---
+                    if (c.getIngredienteActual() != null) {
+                        g.setColor(Color.MAGENTA); // Círculo morado para representar que lleva algo
+                        g.fillOval(c.getPosX() * tamanoCelda + 15, c.getPosY() * tamanoCelda + 15, 20, 20);
                     }
                 }
             }

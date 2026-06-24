@@ -16,17 +16,6 @@ public class Main {
 
         // Crear proteína
         Proteina carne = new Proteina("Carne de Res");
-        
-        // Verificar su estado inicial
-        // System.out.println("Estado de la " + carne.getNombre() + ": " + carne.getEstado() + " (Cocinada: " + carne.isCocinada() + ")");
-
-        // Hacer que el Chef 1 agarre la carne
-        chef1.setIngredienteActual(carne);
-        
-        // Validar que el chef la tiene
-        if (chef1.getIngredienteActual() != null) {
-            // System.out.println(chef1.getNombre() + " ha tomado un ingrediente: " + chef1.getIngredienteActual().getNombre());
-        }
 
         // Crear lista de ingredientes que se necesitan para una receta
         ArrayList<Ingrediente> ingredientesHamburguesa = new ArrayList<>();
