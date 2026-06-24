@@ -6,9 +6,9 @@ public class Main {
         Cocina miCocina = new Cocina();
         miCocina.setTiempo(120); // darle 120 segundos al juego
 
-        //2 chefs
-        Chef chef1 = new Chef("Chef 1");
-        Chef chef2 = new Chef("Chef 2");
+        // 2 chefs
+        Chef chef1 = new Chef("Chef 1", 2, 3);
+        Chef chef2 = new Chef("Chef 2", 6, 4);
 
         //Añadir los chefs a la lista de la cocina
         miCocina.getChefs().add(chef1);
@@ -41,7 +41,8 @@ public class Main {
         // System.out.println("Nueva orden recibida. Puntos posibles: " + miCocina.getOrdenes().get(0).getPuntosReceta());
 
         // Mostrar la ventana del juego
-        new VentanaJuego(miCocina);
+        VentanaJuego ventana = new VentanaJuego(miCocina);
+        ventana.requestFocusInWindow();
 
     }
 }

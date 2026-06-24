@@ -3,28 +3,21 @@ import java.util.List;
 
 public class Estacion {
     private String nombre;
+    private String tipo;
+    private int posX, posY;
     private List<Ingrediente> ingredientesAceptados;
-    private List<Receta> recetasDisponibles;
 
-    // Constructor
-    public Estacion(String nombre) {
+    public Estacion(String nombre, String tipo, int posX, int posY) {
         this.nombre = nombre;
+        this.tipo = tipo;
+        this.posX = posX;
+        this.posY = posY;
         this.ingredientesAceptados = new ArrayList<>();
-        this.recetasDisponibles = new ArrayList<>();
     }
 
-    // Método que pide el UML
-    public Receta generarReceta() {
-        return null; 
-    }
-
-    // Getters y Setters
+    // Getters
     public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-
-    public List<Ingrediente> getIngredientesAceptados() { return ingredientesAceptados; }
-    public void setIngredientesAceptados(List<Ingrediente> ingredientesAceptados) { this.ingredientesAceptados = ingredientesAceptados; }
-
-    public List<Receta> getRecetasDisponibles() { return recetasDisponibles; }
-    public void setRecetasDisponibles(List<Receta> recetasDisponibles) { this.recetasDisponibles = recetasDisponibles; }
+    public String getTipo() { return tipo; }
+    public int getPosX() { return posX; }
+    public int getPosY() { return posY; }
 }

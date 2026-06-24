@@ -5,16 +5,20 @@ public class Cocina {
     private int tiempo;
     private List<Chef> chefs;
     private List<Receta> ordenes;
+    private List<Estacion> estaciones; // Lista de estaciones en la cocina
 
     // Constructor
     public Cocina() {
-        this.tiempo = 0; // El temporizador inicia en 0
+        this.tiempo = 0; 
         this.chefs = new ArrayList<>();
         this.ordenes = new ArrayList<>();
+        this.estaciones = new ArrayList<>();
+        this.estaciones.add(new Estacion("Despensa A", "DESPENSA", 1, 1));
+        this.estaciones.add(new Estacion("Mesa A", "TRABAJO", 4, 2));
+        this.estaciones.add(new Estacion("Salida A", "ENTREGA", 7, 5));
     }
 
     public Receta generarReceta() {
-        // retorna null, generación aleatoria más adelante
         return null;
     }
 
@@ -27,4 +31,7 @@ public class Cocina {
 
     public List<Receta> getOrdenes() { return ordenes; }
     public void setOrdenes(List<Receta> ordenes) { this.ordenes = ordenes; }
+
+    // Getter para las estaciones
+    public List<Estacion> getEstaciones() { return estaciones; }
 }
