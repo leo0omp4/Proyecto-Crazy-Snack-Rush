@@ -11,8 +11,8 @@ public class VentanaJuego extends JFrame implements KeyListener {
     private Cocina cocinaActual; 
     private PanelCocina panel;
     private int chefSeleccionado = 0; 
-    private final int columnas = 16; // 800 / 50
-    private final int filas = 12;    // 600 / 50
+    private final int columnas = 16; 
+    private final int filas = 12;    
 
     public VentanaJuego(Cocina cocina) {
         this.cocinaActual = cocina;
@@ -38,6 +38,12 @@ public class VentanaJuego extends JFrame implements KeyListener {
         Chef chefActivo = cocinaActual.getChefs().get(chefSeleccionado);
         int key = e.getKeyCode();
         
+        // INTERACCIÓN CON ESTACIONES (TECLA E)
+        if (key == KeyEvent.VK_E) {
+            interactuar(chefActivo);
+            return;
+        }
+
         int nuevaX = chefActivo.getPosX();
         int nuevaY = chefActivo.getPosY();
 
@@ -51,13 +57,8 @@ public class VentanaJuego extends JFrame implements KeyListener {
             return;
         }
 
-        // LÍMITES DE PANTALLA
-        if (nuevaX < 0 || nuevaX >= columnas || nuevaY < 0 || nuevaY >= filas) {
-            System.out.println("¡Fuera de límites!");
-            return;
-        }
+        if (nuevaX < 0 || nuevaX >= columnas || nuevaY < 0 || nuevaY >= filas) return;
 
-        // COLISIONES
         boolean hayColision = false;
         for (Estacion est : cocinaActual.getEstaciones()) {
             if (est.getPosX() == nuevaX && est.getPosY() == nuevaY) {
@@ -69,11 +70,22 @@ public class VentanaJuego extends JFrame implements KeyListener {
         if (!hayColision) {
             chefActivo.setPosX(nuevaX);
             chefActivo.setPosY(nuevaY);
-        } else {
-            System.out.println("¡Choque con una estación!");
         }
 
         panel.repaint(); 
+    }
+
+    private void interactuar(Chef chef) {
+        // Buscamos si hay una estación adyacente (arriba, abajo, izq, der)
+        for (Estacion est : cocinaActual.getEstaciones()) {
+            int dx = Math.abs(est.getPosX() - chef.getPosX());
+            int dy = Math.abs(est.getPosY() - chef.getPosY());
+            
+            if (dx + dy == 1) { // Está justo al lado
+                System.out.println("Interactuando con: " + est.getTipo());
+                // Aquí llamaremos a la lógica de recoger/cocinar/entregar
+            }
+        }
     }
 
     @Override
