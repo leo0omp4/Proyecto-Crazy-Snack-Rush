@@ -11,6 +11,8 @@ public class VentanaJuego extends JFrame implements KeyListener {
     private Cocina cocinaActual; 
     private PanelCocina panel;
     private int chefSeleccionado = 0; 
+    private final int columnas = 16; // 800 / 50
+    private final int filas = 12;    // 600 / 50
 
     public VentanaJuego(Cocina cocina) {
         this.cocinaActual = cocina;
@@ -26,7 +28,6 @@ public class VentanaJuego extends JFrame implements KeyListener {
         this.setFocusable(true);
         this.setVisible(true);
         
-        // Forzamos el repintado inicial para asegurar que las estaciones aparezcan
         panel.repaint();
     }
 
@@ -36,14 +37,42 @@ public class VentanaJuego extends JFrame implements KeyListener {
 
         Chef chefActivo = cocinaActual.getChefs().get(chefSeleccionado);
         int key = e.getKeyCode();
+        
+        int nuevaX = chefActivo.getPosX();
+        int nuevaY = chefActivo.getPosY();
 
-        if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) chefActivo.mover(0, -1);
-        else if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) chefActivo.mover(0, 1);
-        else if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) chefActivo.mover(-1, 0);
-        else if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) chefActivo.mover(1, 0);
+        if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) nuevaY--;
+        else if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) nuevaY++;
+        else if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) nuevaX--;
+        else if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) nuevaX++;
         else if (key == KeyEvent.VK_SPACE) {
             chefSeleccionado = (chefSeleccionado + 1) % cocinaActual.getChefs().size();
+            panel.repaint();
+            return;
         }
+
+        // LÍMITES DE PANTALLA
+        if (nuevaX < 0 || nuevaX >= columnas || nuevaY < 0 || nuevaY >= filas) {
+            System.out.println("¡Fuera de límites!");
+            return;
+        }
+
+        // COLISIONES
+        boolean hayColision = false;
+        for (Estacion est : cocinaActual.getEstaciones()) {
+            if (est.getPosX() == nuevaX && est.getPosY() == nuevaY) {
+                hayColision = true;
+                break;
+            }
+        }
+
+        if (!hayColision) {
+            chefActivo.setPosX(nuevaX);
+            chefActivo.setPosY(nuevaY);
+        } else {
+            System.out.println("¡Choque con una estación!");
+        }
+
         panel.repaint(); 
     }
 
@@ -60,13 +89,22 @@ public class VentanaJuego extends JFrame implements KeyListener {
             g.setColor(new Color(200, 200, 200)); 
             g.fillRect(0, 0, 800, 600); 
             
-            // Dibujar cuadrícula
             g.setColor(Color.BLACK); 
             int tamanoCelda = 50; 
             for (int x = 0; x <= 800; x += tamanoCelda) g.drawLine(x, 0, x, 600);
             for (int y = 0; y <= 600; y += tamanoCelda) g.drawLine(0, y, 800, y);
 
-            // 3. DIBUJAR A LOS CHEFS
+            if (cocinaActual != null && cocinaActual.getEstaciones() != null) {
+                for (Estacion est : cocinaActual.getEstaciones()) {
+                    if (est.getTipo().equals("DESPENSA")) g.setColor(Color.BLUE);
+                    else if (est.getTipo().equals("TRABAJO")) g.setColor(Color.ORANGE);
+                    else if (est.getTipo().equals("ENTREGA")) g.setColor(Color.GREEN);
+                    else g.setColor(Color.DARK_GRAY);
+                    
+                    g.fillRect(est.getPosX() * tamanoCelda + 5, est.getPosY() * tamanoCelda + 5, tamanoCelda - 10, tamanoCelda - 10);
+                }
+            }
+
             if (cocinaActual != null && cocinaActual.getChefs() != null) {
                 List<Chef> chefs = cocinaActual.getChefs();
                 for (int i = 0; i < chefs.size(); i++) {
@@ -77,19 +115,6 @@ public class VentanaJuego extends JFrame implements KeyListener {
                         g.setColor(Color.YELLOW);
                         g.drawOval(c.getPosX() * tamanoCelda + 2, c.getPosY() * tamanoCelda + 2, tamanoCelda - 4, tamanoCelda - 4);
                     }
-                }
-            }
-
-            // 4. DIBUJAR LAS ESTACIONES
-            if (cocinaActual != null && cocinaActual.getEstaciones() != null) {
-                for (Estacion est : cocinaActual.getEstaciones()) {
-                    System.out.println("Dibujando estación: " + est.getNombre());
-                    if (est.getTipo().equals("DESPENSA")) g.setColor(Color.BLUE);
-                    else if (est.getTipo().equals("TRABAJO")) g.setColor(Color.ORANGE);
-                    else if (est.getTipo().equals("ENTREGA")) g.setColor(Color.GREEN);
-                    else g.setColor(Color.DARK_GRAY);
-                    
-                    g.fillRect(est.getPosX() * tamanoCelda + 5, est.getPosY() * tamanoCelda + 5, tamanoCelda - 10, tamanoCelda - 10);
                 }
             }
         }
