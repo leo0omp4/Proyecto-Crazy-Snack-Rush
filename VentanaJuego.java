@@ -34,13 +34,17 @@ public class VentanaJuego extends JFrame implements KeyListener {
         this.setFocusable(true);
         this.setVisible(true);
         
-        // BUCLE DE JUEGO EN TIEMPO REAL
         gameLoopTimer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (cocinaActual != null) {
+                    for (Estacion est : cocinaActual.getEstaciones()) {
+                        est.actualizarEstadoIngrediente();
+                    }
+                }
+
                 if (juegoTerminado) return;
 
-                // Decrementar temporizador de la partida
                 int tiempoRestante = cocinaActual.getTiempo();
                 if (tiempoRestante > 0) {
                     cocinaActual.setTiempo(tiempoRestante - 1);
@@ -54,12 +58,11 @@ public class VentanaJuego extends JFrame implements KeyListener {
                     orden.actualizarTiempo();
                 }
 
-                // Procesamiento cocción en estufas
                 for (Estacion est : cocinaActual.getEstaciones()) {
                     if (est.getTipo().equals("COCINAR") && est.getIngredienteActual() != null) {
                         Ingrediente ing = est.getIngredienteActual();
                         if (ing.getNombre().equals("Carne Cruda")) {
-                            est.setProgreso(est.getProgreso() + 20); // 20% cada segundo (se cocina en 5s)
+                            est.setProgreso(est.getProgreso() + 20);
                             if (est.getProgreso() >= 100) {
                                 ing.setNombre("Carne Cocinada");
                                 System.out.println("¡La carne se ha cocinado!");
@@ -84,7 +87,6 @@ public class VentanaJuego extends JFrame implements KeyListener {
         Chef chefActivo = cocinaActual.getChefs().get(chefSeleccionado);
         int key = e.getKeyCode();
         
-        // Interacción con estaciones (Tecla E)
         if (key == KeyEvent.VK_E) {
             interactuar(chefActivo);
             return;
@@ -93,19 +95,17 @@ public class VentanaJuego extends JFrame implements KeyListener {
         int nuevaX = chefActivo.getPosX();
         int nuevaY = chefActivo.getPosY();
 
-        // Movimiento básico de cuadrícula
         if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) nuevaY--;
         else if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) nuevaY++;
         else if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) nuevaX--;
         else if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) nuevaX++;
         else if (key == KeyEvent.VK_SPACE) {
-            // Intercambiar selección de Chef activo
+            
             chefSeleccionado = (chefSeleccionado + 1) % cocinaActual.getChefs().size();
             panel.repaint();
             return;
         }
 
-        // El movimiento se limita para no pisar la zona superior reservada al HUD (filas 0 y 1)
         if (nuevaX < 0 || nuevaX >= columnas || nuevaY < 2 || nuevaY >= filas) return;
 
         // Comprobación de colisiones con estaciones
@@ -130,10 +130,8 @@ public class VentanaJuego extends JFrame implements KeyListener {
             int dx = Math.abs(est.getPosX() - chef.getPosX());
             int dy = Math.abs(est.getPosY() - chef.getPosY());
             
-            // Distancia de exactamente 1 bloque para interactuar
             if (dx + dy == 1) { 
                 
-                // INTERACCIÓN CON DESPENSAS (Suministran ingredientes crudos)
                 if (est.getTipo().equals("DESPENSA")) {
                     if (chef.getIngredienteActual() == null) {
                         if (est.getNombre().contains("Pan")) {
@@ -152,7 +150,6 @@ public class VentanaJuego extends JFrame implements KeyListener {
                     }
                 }
                 
-                // INTERACCIÓN CON ESTUFAS (Se cocinan solas con el tiempo)
                 else if (est.getTipo().equals("COCINAR")) {
                     if (chef.getIngredienteActual() != null && est.getIngredienteActual() == null) {
                         Ingrediente ing = chef.getIngredienteActual();
@@ -170,7 +167,6 @@ public class VentanaJuego extends JFrame implements KeyListener {
                     }
                 }
 
-                // INTERACCIÓN CON LA TABLA DE PICAR
                 else if (est.getTipo().equals("CORTAR")) {
                     if (chef.getIngredienteActual() != null && est.getIngredienteActual() == null) {
                         Ingrediente ing = chef.getIngredienteActual();
@@ -183,7 +179,6 @@ public class VentanaJuego extends JFrame implements KeyListener {
                     } else if (chef.getIngredienteActual() == null && est.getIngredienteActual() != null) {
                         Ingrediente ing = est.getIngredienteActual();
                         if (ing.getNombre().equals("Lechuga Cruda") && est.getProgreso() < 100) {
-                            // Avanzar corte manualmente
                             est.setProgreso(est.getProgreso() + 25);
                             System.out.println("¡Picando! Progreso: " + est.getProgreso() + "%");
                             if (est.getProgreso() >= 100) {
@@ -191,7 +186,6 @@ public class VentanaJuego extends JFrame implements KeyListener {
                                 System.out.println("¡La lechuga ha sido picada!");
                             }
                         } else {
-                            // Recoger el vegetal picado
                             chef.setIngredienteActual(ing);
                             est.setIngredienteActual(null);
                             est.setProgreso(0);
@@ -200,23 +194,19 @@ public class VentanaJuego extends JFrame implements KeyListener {
                     }
                 }
 
-                // INTERACCIÓN CON MESAS DE ARMADO
                 else if (est.getTipo().equals("ARMAR")) {
                     if (chef.getIngredienteActual() != null && est.getIngredienteActual() == null) {
                         Ingrediente ing = chef.getIngredienteActual();
                         
-                        // CORRECCIÓN: Si el chef ya lleva la Hamburguesa Completa terminada, se coloca en el plato listo
                         if (ing.getNombre().equals("Hamburguesa Completa")) {
                             est.setIngredienteActual(ing);
                             chef.setIngredienteActual(null);
                             System.out.println("Dejaste la Hamburguesa Completa de vuelta en la mesa de armado.");
                         } else {
-                            // Si son ingredientes crudos/sueltos, los añadimos para armarla
-                            est.getIngredientesEnMesa().add(ing);
+                             est.getIngredientesEnMesa().add(ing);
                             chef.setIngredienteActual(null);
                             System.out.println("Dejaste " + ing.getNombre() + " en la mesa de armado.");
 
-                            // Contar cuántos panes, carnes y lechugas hay en la mesa
                             int cantPan = 0;
                             int cantCarne = 0;
                             int cantLechuga = 0;
@@ -244,8 +234,8 @@ public class VentanaJuego extends JFrame implements KeyListener {
                 // INTERACCIÓN CON MOSTRADORES DE ENTREGA
                 else if (est.getTipo().equals("ENTREGA")) {
                     if (chef.getIngredienteActual() != null && chef.getIngredienteActual().getNombre().equals("Hamburguesa Completa")) {
-                        chef.setIngredienteActual(null); // Quitar de las manos del chef
-                        cocinaActual.sumarPuntos(150); // Recompensa de puntos
+                        chef.setIngredienteActual(null);
+                        cocinaActual.sumarPuntos(150);
                         System.out.println("¡Pedido completado con éxito! +150 puntos.");
                         
                         // Renovar el menú de órdenes
@@ -329,7 +319,7 @@ public class VentanaJuego extends JFrame implements KeyListener {
 
                     // Dibujar el ingrediente sobre la superficie de la mesa
                     if (est.getIngredienteActual() != null) {
-                        g.setColor(new Color(155, 89, 182)); // Color púrpura para elementos en mesa
+                        g.setColor(new Color(155, 89, 182));
                         g.fillOval(px + 15, py + 25, 20, 20);
                         
                         g.setColor(Color.WHITE);
@@ -347,7 +337,6 @@ public class VentanaJuego extends JFrame implements KeyListener {
                 }
             }
 
-            // Chefs y sus manos ocupadas
             if (cocinaActual != null && cocinaActual.getChefs() != null) {
                 List<Chef> chefs = cocinaActual.getChefs();
                 for (int i = 0; i < chefs.size(); i++) {
@@ -355,16 +344,13 @@ public class VentanaJuego extends JFrame implements KeyListener {
                     int px = c.getPosX() * tamanoCelda;
                     int py = c.getPosY() * tamanoCelda;
 
-                    // Círculo base del chef (Blanco para Chef 1, Gris oscuro para Chef 2)
                     g.setColor(i == 0 ? Color.WHITE : Color.DARK_GRAY);
                     g.fillOval(px + 6, py + 6, tamanoCelda - 12, tamanoCelda - 12);
                     
-                    // Texto identificador (C1 / C2)
                     g.setColor(i == 0 ? Color.BLACK : Color.WHITE);
                     g.setFont(new Font("SansSerif", Font.BOLD, 12));
                     g.drawString("C" + (i + 1), px + 20, py + 30);
                     
-                    // Indicador de chef seleccionado
                     if(i == chefSeleccionado) {
                         g.setColor(Color.YELLOW);
                         g.drawOval(px + 2, py + 2, tamanoCelda - 4, tamanoCelda - 4);
