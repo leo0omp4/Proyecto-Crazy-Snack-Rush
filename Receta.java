@@ -13,10 +13,10 @@ public class Receta {
 
     public void actualizarTiempo() {
         tiempoTranscurrido++;
-        // Si el tiempo transcurrido llega al límite, reducimos los puntos
+
         if (tiempoTranscurrido >= tiempoLimite && puntosActuales > 0) {
             puntosActuales /= 2;
-            tiempoTranscurrido = 0; // Reiniciamos para el próximo ciclo de degradación
+            tiempoTranscurrido = 0;
         }
     }
 
